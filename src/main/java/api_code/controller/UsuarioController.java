@@ -19,10 +19,7 @@ public class UsuarioController {
     @Autowired
     private final UsuarioService usuarioService;
 
-    @PostMapping
-    public ResponseEntity<Usuario> criar(@RequestBody Usuario usuario) {
-        return ResponseEntity.ok(usuarioService.salvar(usuario));
-    }
+    
 
     @GetMapping
     public ResponseEntity<List<Usuario>> listar() {
@@ -41,7 +38,7 @@ public class UsuarioController {
         return usuarioService.buscarPorId(id)
                 .map(u -> {
                     usuario.setId(id);
-                    return ResponseEntity.ok(usuarioService.salvar(usuario));
+                    return ResponseEntity.ok(usuarioService.cadastrar(usuario));
                 }).orElse(ResponseEntity.notFound().build());
     }
 

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import api_code.entity.Usuario;
@@ -15,9 +16,15 @@ public class UsuarioService {
     @Autowired
     private  UsuarioRepository usuarioRepository;
 
-    public Usuario salvar(Usuario usuario) {
-        return usuarioRepository.save(usuario);
-    }
+@Autowired
+private PasswordEncoder passwordEncoder;
+
+public Usuario cadastrar(Usuario usuario) {
+    String senhaCriptografada = passwordEncoder.encode(usuario.getSenha());
+    usuario.setSenha(senhaCriptografada);
+    return usuarioRepository.save(usuario);
+}
+
 
     public List<Usuario> listarTodos() {
         return usuarioRepository.findAll();

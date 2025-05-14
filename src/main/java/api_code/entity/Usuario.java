@@ -1,5 +1,9 @@
 package api_code.entity;
 
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,6 +14,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Arrays;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -17,10 +23,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Usuario {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-     private String nome;
+    
+    private String nome;
 
     @Column(unique = true)
     private String email;
@@ -32,6 +40,11 @@ public class Usuario {
     private String endereco;
 
     @Column(columnDefinition = "TEXT")
-    private String historico; 
-    
+    private String historico;
+
+    // Método que converte o usuário em UserDetails para Spring Security
+    public UserDetails toUserDetails() {
+        List<SimpleGrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")); // Adicionando uma role básica
+        return new User(email, senha, authorities);
+    }
 }
