@@ -1,4 +1,4 @@
-package api_code.service;
+package api_code.security;
 
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -6,26 +6,24 @@ import org.springframework.stereotype.Service;
 
 import api_code.entity.Usuario;
 import api_code.repository.UsuarioRepository;
-import api_code.security.JwtServico;
-import api_code.security.RequisicaoDTO;
 
 @Service
 public class ServicoAutenticacao {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtServico jwtServico;
+    private final JwtService jwtService;
 
-    public ServicoAutenticacao(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder, JwtServico jwtServico) {
+    public ServicoAutenticacao(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
-        this.jwtServico = jwtServico;
+        this.jwtService = jwtService;
     }
 
     public String autenticar(RequisicaoDTO requisicao) {
         Usuario usuario = usuarioRepository.findByEmail(requisicao.getEmail());
         if (usuario != null && passwordEncoder.matches(requisicao.getSenha(), usuario.getSenha())) {
-            return jwtServico.gerarToken(usuario.getEmail());
+            return jwtService.gerarToken(usuario.getEmail(),usuario.getId());
         }
         throw new RuntimeException("Credenciais inválidas");
     }

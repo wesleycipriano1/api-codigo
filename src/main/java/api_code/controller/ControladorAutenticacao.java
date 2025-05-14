@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import api_code.entity.Usuario;
 import api_code.security.RequisicaoDTO;
 import api_code.security.RespostaDTO;
-import api_code.service.ServicoAutenticacao;
+import api_code.security.ServicoAutenticacao;
 import api_code.service.UsuarioService;
 
 @RestController
@@ -16,10 +16,12 @@ public class ControladorAutenticacao {
 
     private final ServicoAutenticacao servicoAutenticacao;
     private final UsuarioService usuarioService;
+    
 
     public ControladorAutenticacao(ServicoAutenticacao servicoAutenticacao, UsuarioService usuarioService) {
         this.servicoAutenticacao = servicoAutenticacao;
         this.usuarioService = usuarioService;
+        
     }
 
     @PostMapping("/login")
@@ -33,5 +35,6 @@ public class ControladorAutenticacao {
     public ResponseEntity<Usuario> criar(@RequestBody Usuario usuario) {
         return ResponseEntity.ok(usuarioService.cadastrar(usuario));
     }
+    
 
 }
