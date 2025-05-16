@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import api_code.dto.ClasseRequestDTO;
 import api_code.dto.HistoricoDTO;
-import api_code.entity.ClasseFactory;
 import api_code.service.HistoricoService;
 
 @RestController
@@ -26,19 +25,12 @@ public class ClasseController {
     @PostMapping("/gerar")
     public ResponseEntity<String> gerarClasse(@RequestBody ClasseRequestDTO dto,
             @RequestHeader("Authorization") String token) {
-        String tokenJwt = token.replace("Bearer ", "");
-
-        String codigoGerado = ClasseFactory.gerar(dto);
-
-        historicoService.salvarHistorico(dto.getLinguagem(), codigoGerado, tokenJwt);
-
-        return ResponseEntity.ok(codigoGerado);
+        return ResponseEntity.ok(historicoService.gerarClasseComHistorico(dto, token));
     }
 
     @GetMapping("/historico")
     public ResponseEntity<List<HistoricoDTO>> historico(@RequestHeader("Authorization") String token) {
-        String tokenJwt = token.replace("Bearer ", "");
-        return ResponseEntity.ok(historicoService.listarHistoricoDoUsuario(tokenJwt));
+        return ResponseEntity.ok(historicoService.buscarHistoricoDoUsuario(token));
     }
 
 }

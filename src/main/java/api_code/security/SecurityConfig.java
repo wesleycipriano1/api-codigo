@@ -47,7 +47,7 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(auth -> auth
-           .requestMatchers("/auth/**").permitAll() 
+           .requestMatchers("/auth/**","/api/recuperar-senha/**").permitAll() 
             .anyRequest().authenticated()
         )
         .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

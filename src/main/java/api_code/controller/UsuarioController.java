@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import api_code.entity.Usuario;
 import api_code.service.UsuarioService;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/usuarios")
 @RequiredArgsConstructor
@@ -19,32 +17,28 @@ public class UsuarioController {
     @Autowired
     private final UsuarioService usuarioService;
 
-    
-
-    @GetMapping
-    public ResponseEntity<List<Usuario>> listar() {
-        return ResponseEntity.ok(usuarioService.listarTodos());
+    @GetMapping()
+    public ResponseEntity<Usuario> buscarUsuarioLogado(@RequestHeader("Authorization") String token) {
+        return ResponseEntity.ok(usuarioService.obterUsuarioPeloToken(token));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Usuario> buscar(@PathVariable Long id) {
-        return usuarioService.buscarPorId(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @PostMapping()
+    public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody Usuario usuario) {
+        return ResponseEntity.ok(usuarioService.cadastrar(usuario));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Usuario> atualizar(@PathVariable Long id, @RequestBody Usuario usuario) {
-        return usuarioService.buscarPorId(id)
-                .map(u -> {
-                    usuario.setId(id);
-                    return ResponseEntity.ok(usuarioService.cadastrar(usuario));
-                }).orElse(ResponseEntity.notFound().build());
+    @PutMapping()
+    public ResponseEntity<Usuario> atualizarUsuarioLogado(@RequestHeader("Authorization") String token,
+            @RequestBody Usuario usuarioAtualizado) {
+        Usuario usuario = usuarioService.obterUsuarioPeloToken(token);
+        usuarioAtualizado.setId(usuario.getId());
+        return ResponseEntity.ok(usuarioService.cadastrar(usuarioAtualizado));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        usuarioService.deletar(id);
+    @DeleteMapping()
+    public ResponseEntity<Void> deletarUsuarioLogado(@RequestHeader("Authorization") String token) {
+        Usuario usuario = usuarioService.obterUsuarioPeloToken(token);
+        usuarioService.deletar(usuario.getId());
         return ResponseEntity.noContent().build();
     }
 }
