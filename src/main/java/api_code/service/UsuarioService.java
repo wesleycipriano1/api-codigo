@@ -36,6 +36,22 @@ public class UsuarioService {
 
     }
 
+    public Usuario atualizar(Usuario usuarioAtualizado, String token) {
+        Usuario usuarioOld = obterUsuarioPeloToken(token);
+
+        if (usuarioOld == null) {
+            throw new UsuarioNãoEncontradoExeception("Usuário não encontrado");
+        }
+
+        if (buscarPorId(usuarioOld.getId()).isPresent()) {
+            usuarioAtualizado.setId(usuarioOld.getId());
+            usuarioAtualizado.setSenha(passwordEncoder.encode(usuarioAtualizado.getSenha()));
+            return usuarioRepository.save(usuarioAtualizado);
+        }
+
+        throw new UsuarioNãoEncontradoExeception("Usuário não encontrado");
+    }
+
     public List<Usuario> listarTodos() {
         return usuarioRepository.findAll();
     }
@@ -44,8 +60,9 @@ public class UsuarioService {
         return usuarioRepository.findById(id);
     }
 
-    public void deletar(Long id) {
-        usuarioRepository.deleteById(id);
+    public void deletar(String token) {
+        Usuario usuario = obterUsuarioPeloToken(token);
+        usuarioRepository.deleteById(usuario.getId());
     }
 
     public Usuario obterUsuarioPeloToken(String tokenCompleto) {
@@ -57,5 +74,11 @@ public class UsuarioService {
 
     private String extrairToken(String header) {
         return header.replace("Bearer ", "").trim();
+    }
+
+
+    //usado somente para o admin,deve ser removido depois
+    public void deletarADM(Long id) {
+        usuarioRepository.deleteById(id);
     }
 }

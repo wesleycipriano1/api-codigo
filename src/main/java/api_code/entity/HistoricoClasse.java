@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,10 +24,11 @@ public class HistoricoClasse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @NotBlank(message = "Nome da linguagem não pode estar vazio.")
     private String linguagem;
 
     @Column(columnDefinition = "TEXT")
+    @NotBlank(message = "Código não pode estar vazio.")
     private String codigo;
 
     private LocalDateTime dataModificacao;

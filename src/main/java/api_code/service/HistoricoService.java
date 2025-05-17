@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 
 import api_code.dto.ClasseRequestDTO;
 import api_code.dto.HistoricoDTO;
-import api_code.entity.ClasseFactory;
 import api_code.entity.HistoricoClasse;
 import api_code.entity.Usuario;
 import api_code.repository.HistoricoClasseRepository;
+import api_code.util.ClasseFactory;
 
 @Service
 public class HistoricoService {

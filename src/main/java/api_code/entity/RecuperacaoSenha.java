@@ -1,6 +1,7 @@
 package api_code.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +15,7 @@ public class RecuperacaoSenha {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @NotBlank(message = "Token não pode estar vazio.")
     private String token;
 
     private LocalDateTime expiracao;

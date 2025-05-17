@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import api_code.entity.Usuario;
 import api_code.service.UsuarioService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -23,22 +24,20 @@ public class UsuarioController {
     }
 
     @PostMapping()
-    public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody Usuario usuario) {
+    public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody @Valid Usuario usuario) {
         return ResponseEntity.ok(usuarioService.cadastrar(usuario));
     }
 
     @PutMapping()
     public ResponseEntity<Usuario> atualizarUsuarioLogado(@RequestHeader("Authorization") String token,
-            @RequestBody Usuario usuarioAtualizado) {
-        Usuario usuario = usuarioService.obterUsuarioPeloToken(token);
-        usuarioAtualizado.setId(usuario.getId());
-        return ResponseEntity.ok(usuarioService.cadastrar(usuarioAtualizado));
+            @RequestBody @Valid Usuario usuarioAtualizado) {
+
+        return ResponseEntity.ok(usuarioService.atualizar(usuarioAtualizado, token));
     }
 
     @DeleteMapping()
     public ResponseEntity<Void> deletarUsuarioLogado(@RequestHeader("Authorization") String token) {
-        Usuario usuario = usuarioService.obterUsuarioPeloToken(token);
-        usuarioService.deletar(usuario.getId());
+        usuarioService.deletar(token);
         return ResponseEntity.noContent().build();
     }
 }

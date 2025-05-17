@@ -16,25 +16,29 @@ public class ControladorAutenticacao {
 
     private final ServicoAutenticacao servicoAutenticacao;
     private final UsuarioService usuarioService;
-    
 
     public ControladorAutenticacao(ServicoAutenticacao servicoAutenticacao, UsuarioService usuarioService) {
         this.servicoAutenticacao = servicoAutenticacao;
         this.usuarioService = usuarioService;
-        
+
     }
 
     @PostMapping("/login")
-    @ResponseStatus(HttpStatus.OK)
-    public RespostaDTO login(@RequestBody RequisicaoDTO requisicao) {
+    public ResponseEntity<RespostaDTO> login(@RequestBody RequisicaoDTO requisicao) {
         String token = servicoAutenticacao.autenticar(requisicao);
-        return new RespostaDTO(token);
+        return ResponseEntity.ok(new RespostaDTO(token));
+
     }
 
     @PostMapping("/cadastrar")
     public ResponseEntity<Usuario> criar(@RequestBody Usuario usuario) {
         return ResponseEntity.ok(usuarioService.cadastrar(usuario));
     }
-    
+    //usado para remover um usuario sem a necessidade de token,somente para o admin,deve ser excluido depois,usado pra testes.
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deletarUsuarioLogado(@PathVariable Long id) {
+        usuarioService.deletarADM(id);
+        return ResponseEntity.noContent().build();
+    }
 
 }

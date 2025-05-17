@@ -1,4 +1,4 @@
-package api_code.entity;
+package api_code.util;
 
 import api_code.dto.ClasseRequestDTO;
 import api_code.exception.LinguagemNaoSuportadaException;
