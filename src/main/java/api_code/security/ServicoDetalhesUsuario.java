@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import api_code.entity.Usuario;
+import api_code.exception.UsuarioNãoEncontradoExeception;
 import api_code.repository.UsuarioRepository;
 
 @Service
@@ -22,7 +23,7 @@ public class ServicoDetalhesUsuario implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) {
         Usuario usuario = usuarioRepository.findByEmail(email);
         if (usuario == null) {
-            throw new RuntimeException("Usuário não encontrado");
+            throw new UsuarioNãoEncontradoExeception("Usuário não encontrado");
         }
         return usuario.toUserDetails();
     }

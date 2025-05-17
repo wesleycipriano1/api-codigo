@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @Entity
@@ -21,5 +22,4 @@ public class RecuperacaoSenha {
     @ManyToOne
     private Usuario usuario;
 
-   
 }

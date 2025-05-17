@@ -4,11 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import api_code.entity.Usuario;
+import api_code.exception.EmailCadastradoException;
+import api_code.exception.UsuarioNãoEncontradoExeception;
 import api_code.repository.UsuarioRepository;
 import api_code.security.JwtService;
 
@@ -31,7 +32,7 @@ public class UsuarioService {
             usuario.setSenha(senhaCriptografada);
             return usuarioRepository.save(usuario);
         }
-        throw new RuntimeException("Email já cadastrado");
+        throw new EmailCadastradoException("Email já cadastrado");
 
     }
 
@@ -51,7 +52,7 @@ public class UsuarioService {
         String token = extrairToken(tokenCompleto);
         Long usuarioId = jwtService.obterId(token);
         return usuarioRepository.findById(usuarioId)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+                .orElseThrow(() -> new UsuarioNãoEncontradoExeception("Usuário não encontrado"));
     }
 
     private String extrairToken(String header) {

@@ -2,10 +2,11 @@ package api_code.service;
 
 import api_code.entity.RecuperacaoSenha;
 import api_code.entity.Usuario;
+import api_code.exception.TokenInvalidoException;
+import api_code.exception.UsuarioNãoEncontradoExeception;
 import api_code.repository.RecuperacaoSenhaRepository;
 import api_code.repository.UsuarioRepository;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +21,8 @@ public class RecuperacaoSenhaService {
     private final RabbitTemplate rabbitTemplate;
 
     public RecuperacaoSenhaService(UsuarioRepository usuarioRepository,
-                                   RecuperacaoSenhaRepository recuperacaoSenhaRepository,
-                                   RabbitTemplate rabbitTemplate) {
+            RecuperacaoSenhaRepository recuperacaoSenhaRepository,
+            RabbitTemplate rabbitTemplate) {
         this.usuarioRepository = usuarioRepository;
         this.recuperacaoSenhaRepository = recuperacaoSenhaRepository;
         this.rabbitTemplate = rabbitTemplate;
@@ -30,7 +31,7 @@ public class RecuperacaoSenhaService {
     public void solicitarRecuperacao(String email) {
         Usuario usuario = usuarioRepository.findByEmail(email);
         if (usuario == null) {
-            throw new UsernameNotFoundException("Usuário não encontrado");
+            throw new UsuarioNãoEncontradoExeception("Usuário não encontrado");
         }
 
         String token = UUID.randomUUID().toString();
@@ -52,10 +53,10 @@ public class RecuperacaoSenhaService {
 
     public void redefinirSenha(String token, String novaSenha) {
         RecuperacaoSenha recuperacao = recuperacaoSenhaRepository.findByToken(token)
-                .orElseThrow(() -> new IllegalArgumentException("Token inválido"));
+                .orElseThrow(() -> new TokenInvalidoException("Token inválido"));
 
         if (recuperacao.getExpiracao().isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("Token expirado");
+            throw new TokenInvalidoException("Token expirado");
         }
 
         Usuario usuario = recuperacao.getUsuario();

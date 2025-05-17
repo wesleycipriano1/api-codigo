@@ -31,7 +31,8 @@ public class EmailListener {
         SimpleMailMessage mensagem = new SimpleMailMessage();
         mensagem.setTo(email);
         mensagem.setSubject("Recuperação de Senha");
-        mensagem.setText("Olá " + nome + ",\n\nClique no link abaixo para redefinir sua senha:\n" + link + "\n\nO link expira em 2 horas.");
+        mensagem.setText("Olá " + nome + ",\n\nClique no link abaixo para redefinir sua senha:\n" + link
+                + "\n\nO link expira em 2 horas.");
 
         mailSender.send(mensagem);
     }

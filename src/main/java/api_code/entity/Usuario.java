@@ -23,11 +23,11 @@ import java.util.List;
 @Getter
 @Setter
 public class Usuario {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     private String nome;
 
     @Column(unique = true)
@@ -42,9 +42,10 @@ public class Usuario {
     @Column(columnDefinition = "TEXT")
     private String historico;
 
-    // Método que converte o usuário em UserDetails para Spring Security
+    
     public UserDetails toUserDetails() {
-        List<SimpleGrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")); // Adicionando uma role básica
+        List<SimpleGrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+
         return new User(email, senha, authorities);
     }
 }

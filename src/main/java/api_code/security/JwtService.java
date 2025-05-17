@@ -30,7 +30,7 @@ public class JwtService {
     public String gerarToken(String email, Long id) {
         return Jwts.builder()
                 .setSubject(email)
-                .claim("id", id) // Inclui o ID no token
+                .claim("id", id) 
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(secretKey, SignatureAlgorithm.HS256)

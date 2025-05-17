@@ -1,6 +1,7 @@
 package api_code.entity;
 
 import api_code.dto.ClasseRequestDTO;
+import api_code.exception.LinguagemNaoSuportadaException;
 
 public class ClasseFactory {
 
@@ -11,7 +12,7 @@ public class ClasseFactory {
             case "python":
                 return gerarPython(dto);
             default:
-                throw new IllegalArgumentException("Linguagem não suportada");
+                throw new LinguagemNaoSuportadaException("Linguagem não suportada");
         }
     }
 
@@ -19,8 +20,8 @@ public class ClasseFactory {
         StringBuilder sb = new StringBuilder();
 
         sb.append(dto.getEncapsulamentoClasse())
-          .append(" class ")
-          .append(dto.getNomeClasse());
+                .append(" class ")
+                .append(dto.getNomeClasse());
 
         if (dto.getHeranca() != null && !dto.getHeranca().isEmpty()) {
             sb.append(" extends ").append(dto.getHeranca());
@@ -30,12 +31,12 @@ public class ClasseFactory {
 
         for (ClasseRequestDTO.AtributoDTO atributo : dto.getAtributos()) {
             sb.append("    ")
-              .append(atributo.getEncapsulamento())
-              .append(" ")
-              .append(atributo.getTipo())
-              .append(" ")
-              .append(atributo.getNome())
-              .append(";\n");
+                    .append(atributo.getEncapsulamento())
+                    .append(" ")
+                    .append(atributo.getTipo())
+                    .append(" ")
+                    .append(atributo.getNome())
+                    .append(";\n");
         }
 
         sb.append("}");
@@ -47,7 +48,7 @@ public class ClasseFactory {
         StringBuilder sb = new StringBuilder();
 
         sb.append("class ")
-          .append(dto.getNomeClasse());
+                .append(dto.getNomeClasse());
 
         if (dto.getHeranca() != null && !dto.getHeranca().isEmpty()) {
             sb.append("(").append(dto.getHeranca()).append(")");
@@ -68,14 +69,13 @@ public class ClasseFactory {
 
             for (ClasseRequestDTO.AtributoDTO atributo : dto.getAtributos()) {
                 sb.append("        self.")
-                  .append(atributo.getNome())
-                  .append(" = ")
-                  .append(atributo.getNome())
-                  .append("\n");
+                        .append(atributo.getNome())
+                        .append(" = ")
+                        .append(atributo.getNome())
+                        .append("\n");
             }
         }
 
         return sb.toString();
     }
 }
-
