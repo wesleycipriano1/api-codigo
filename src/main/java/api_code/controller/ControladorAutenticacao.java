@@ -5,9 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import api_code.entity.Usuario;
-import api_code.security.RequisicaoDTO;
-import api_code.security.RespostaDTO;
-import api_code.security.ServicoAutenticacao;
+import api_code.security.dto.RequisicaoDTO;
+import api_code.security.dto.RespostaDTO;
+import api_code.security.service.ServicoAutenticacao;
 import api_code.service.UsuarioService;
 
 @RestController

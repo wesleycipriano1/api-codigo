@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,7 @@ import api_code.dto.ClasseRequestDTO;
 import api_code.dto.HistoricoDTO;
 import api_code.service.HistoricoService;
 
+@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 @RestController
 @RequestMapping("/classe")
 public class ClasseController {
@@ -30,6 +32,7 @@ public class ClasseController {
 
     @GetMapping("/historico")
     public ResponseEntity<List<HistoricoDTO>> historico(@RequestHeader("Authorization") String token) {
+        System.out.println("esse é o token que vem do front and -->"+token);
         return ResponseEntity.ok(historicoService.buscarHistoricoDoUsuario(token));
     }
 

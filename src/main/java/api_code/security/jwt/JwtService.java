@@ -1,4 +1,4 @@
-package api_code.security;
+package api_code.security.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -30,7 +30,7 @@ public class JwtService {
     public String gerarToken(String email, Long id) {
         return Jwts.builder()
                 .setSubject(email)
-                .claim("id", id) 
+                .claim("id", id)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(secretKey, SignatureAlgorithm.HS256)

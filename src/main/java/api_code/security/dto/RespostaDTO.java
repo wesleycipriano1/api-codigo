@@ -1,4 +1,4 @@
-package api_code.security;
+package api_code.security.dto;
 
 public class RespostaDTO {
 

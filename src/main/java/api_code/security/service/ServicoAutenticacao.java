@@ -1,4 +1,4 @@
-package api_code.security;
+package api_code.security.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import api_code.entity.Usuario;
 import api_code.exception.CredenciaisInvalidasException;
 import api_code.repository.UsuarioRepository;
+import api_code.security.dto.RequisicaoDTO;
+import api_code.security.jwt.JwtService;
 
 @Service
 public class ServicoAutenticacao {

@@ -1,4 +1,4 @@
-package api_code.security;
+package api_code.security.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

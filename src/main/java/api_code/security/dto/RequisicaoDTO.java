@@ -1,4 +1,4 @@
-package api_code.security;
+package api_code.security.dto;
 
 import lombok.Getter;
 import lombok.Setter;

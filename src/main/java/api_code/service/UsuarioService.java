@@ -11,7 +11,7 @@ import api_code.entity.Usuario;
 import api_code.exception.EmailCadastradoException;
 import api_code.exception.UsuarioNãoEncontradoExeception;
 import api_code.repository.UsuarioRepository;
-import api_code.security.JwtService;
+import api_code.security.jwt.JwtService;
 
 @Service
 public class UsuarioService {
