@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import api_code.entity.Usuario;
 import api_code.exception.EmailCadastradoException;
-import api_code.exception.UsuarioNãoEncontradoExeception;
+import api_code.exception.UsuarioNaoEncontradoExeception;
 import api_code.repository.UsuarioRepository;
 import api_code.security.jwt.JwtService;
 
@@ -40,7 +40,7 @@ public class UsuarioService {
         Usuario usuarioOld = obterUsuarioPeloToken(token);
 
         if (usuarioOld == null) {
-            throw new UsuarioNãoEncontradoExeception("Usuário não encontrado");
+            throw new UsuarioNaoEncontradoExeception("Usuário não encontrado");
         }
 
         if (buscarPorId(usuarioOld.getId()).isPresent()) {
@@ -49,7 +49,7 @@ public class UsuarioService {
             return usuarioRepository.save(usuarioAtualizado);
         }
 
-        throw new UsuarioNãoEncontradoExeception("Usuário não encontrado");
+        throw new UsuarioNaoEncontradoExeception("Usuário não encontrado");
     }
 
     public List<Usuario> listarTodos() {
@@ -69,7 +69,7 @@ public class UsuarioService {
         String token = extrairToken(tokenCompleto);
         Long usuarioId = jwtService.obterId(token);
         return usuarioRepository.findById(usuarioId)
-                .orElseThrow(() -> new UsuarioNãoEncontradoExeception("Usuário não encontrado"));
+                .orElseThrow(() -> new UsuarioNaoEncontradoExeception("Usuário não encontrado"));
     }
 
     private String extrairToken(String header) {

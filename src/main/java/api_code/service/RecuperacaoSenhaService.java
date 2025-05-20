@@ -3,7 +3,7 @@ package api_code.service;
 import api_code.entity.RecuperacaoSenha;
 import api_code.entity.Usuario;
 import api_code.exception.TokenInvalidoException;
-import api_code.exception.UsuarioNãoEncontradoExeception;
+import api_code.exception.UsuarioNaoEncontradoExeception;
 import api_code.repository.RecuperacaoSenhaRepository;
 import api_code.repository.UsuarioRepository;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -31,7 +31,7 @@ public class RecuperacaoSenhaService {
     public void solicitarRecuperacao(String email) {
         Usuario usuario = usuarioRepository.findByEmail(email);
         if (usuario == null) {
-            throw new UsuarioNãoEncontradoExeception("Usuário não encontrado");
+            throw new UsuarioNaoEncontradoExeception("Usuário não encontrado");
         }
 
         String token = UUID.randomUUID().toString();
