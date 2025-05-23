@@ -11,6 +11,7 @@ import api_code.dto.ClasseRequestDTO;
 import api_code.dto.HistoricoDTO;
 import api_code.entity.HistoricoClasse;
 import api_code.entity.Usuario;
+import api_code.exception.UsuarioNaoEncontradoExeception;
 import api_code.repository.HistoricoClasseRepository;
 import api_code.util.ClasseFactory;
 
@@ -49,4 +50,20 @@ public class HistoricoService {
 
         historicoRepo.save(historico);
     }
+
+    public Void deletarHistorico(String token, Long id) {
+        System.out.println("Deletando historico com id: " + id);
+        Usuario usuario = usuarioService.obterUsuarioPeloToken(token);
+        if (usuario != null && historicoRepo.findById(id).isPresent()) {
+            historicoRepo.deleteById(id);
+            return null;
+
+        } else {
+            throw new UsuarioNaoEncontradoExeception("Usuário não encontrado ou histórico não encontrado");
+            
+
+        }
+
+    }
+
 }

@@ -9,12 +9,14 @@ import lombok.Setter;
 @Getter
 @Setter
 public class HistoricoDTO {
+    private Long id;
     private String linguagem;
     private String codigo;
     private LocalDateTime dataModificacao;
     private String emailDoUsuario;
 
     public HistoricoDTO(HistoricoClasse historico) {
+        this.id = historico.getId();
         this.linguagem = historico.getLinguagem();
         this.codigo = historico.getCodigo();
         this.dataModificacao = historico.getDataModificacao();
