@@ -44,7 +44,7 @@ public class Usuario {
     @NotBlank(message = "Senha não pode estar vazio.")
     private String senha;
 
-    @NotBlank
+    @NotBlank(message = "Telefone não pode estar vazio.")
     private String telefone;
 
     @NotBlank(message = "Endereço não pode estar vazio.")

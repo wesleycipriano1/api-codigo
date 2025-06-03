@@ -28,11 +28,6 @@ public class SecurityConfig {
         this.filtroJwt = filtroJwt;
     }
 
-
-
-
-    
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -47,19 +42,18 @@ public class SecurityConfig {
     }
 
     @Bean
-public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http
-        .cors() // Habilita o uso do bean de configuração de CORS
-        .and()
-        .csrf(csrf -> csrf.disable())
-        .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/auth/**", "/api/recuperar-senha/**").permitAll()
-            .anyRequest().authenticated())
-        .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .addFilterBefore(filtroJwt, UsernamePasswordAuthenticationFilter.class);
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .cors()
+                .and()
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/auth/**", "/api/recuperar-senha/**").permitAll()
+                        .anyRequest().authenticated())
+                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(filtroJwt, UsernamePasswordAuthenticationFilter.class);
 
-    return http.build();
-}
-
+        return http.build();
+    }
 
 }

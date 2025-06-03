@@ -7,9 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import api_code.dto.UsuarioRequestDTO;
+import api_code.dto.UsuarioResponseDTO;
 import api_code.entity.Usuario;
 import api_code.exception.EmailCadastradoException;
 import api_code.exception.UsuarioNaoEncontradoExeception;
+import api_code.mapper.UsuarioMapper;
 import api_code.repository.UsuarioRepository;
 import api_code.security.jwt.JwtService;
 
@@ -24,39 +27,39 @@ public class UsuarioService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private UsuarioMapper usuarioMapper;
 
-    public Usuario cadastrar(Usuario usuario) {
-        if (usuarioRepository.findByEmail(usuario.getEmail()) == null) {
-
-            String senhaCriptografada = passwordEncoder.encode(usuario.getSenha());
-            usuario.setSenha(senhaCriptografada);
-            return usuarioRepository.save(usuario);
+    public Optional<UsuarioResponseDTO> cadastrar(UsuarioRequestDTO usuarioRequestDTO) {
+        if (usuarioRepository.findByEmail(usuarioRequestDTO.email()) != null) {
+            throw new EmailCadastradoException("Email já cadastrado");
         }
-        throw new EmailCadastradoException("Email já cadastrado");
 
+        Usuario usuario = usuarioMapper.toEntity(usuarioRequestDTO);
+        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+
+        Usuario usuarioSalvo = usuarioRepository.save(usuario);
+
+        return Optional.of(usuarioMapper.toDTO(usuarioSalvo));
     }
 
-    public Usuario atualizar(Usuario usuarioAtualizado, String token) {
-        Usuario usuarioOld = obterUsuarioPeloToken(token);
+    public UsuarioResponseDTO atualizar(UsuarioRequestDTO usuarioAtualizado, String token) {
+        Usuario usuario = obterUsuarioPeloToken(token);
 
-        if (usuarioOld == null) {
-            throw new UsuarioNaoEncontradoExeception("Usuário não encontrado");
-        }
+        usuario.setNome(usuarioAtualizado.nome());
+        usuario.setEmail(usuarioAtualizado.email());
+        usuario.setEndereco(usuarioAtualizado.endereco());
+        usuario.setSenha(passwordEncoder.encode(usuarioAtualizado.senha()));
 
-        if (buscarPorId(usuarioOld.getId()).isPresent()) {
-            usuarioAtualizado.setId(usuarioOld.getId());
-            usuarioAtualizado.setSenha(passwordEncoder.encode(usuarioAtualizado.getSenha()));
-            return usuarioRepository.save(usuarioAtualizado);
-        }
-
-        throw new UsuarioNaoEncontradoExeception("Usuário não encontrado");
+        Usuario usuarioSalvo = usuarioRepository.save(usuario);
+        return usuarioMapper.toDTO(usuarioSalvo);
     }
 
     public List<Usuario> listarTodos() {
         return usuarioRepository.findAll();
     }
 
-    public Optional<Usuario> buscarPorId(Long id) {
+    protected Optional<Usuario> buscarPorId(Long id) {
         return usuarioRepository.findById(id);
     }
 
@@ -65,7 +68,7 @@ public class UsuarioService {
         usuarioRepository.deleteById(usuario.getId());
     }
 
-    public Usuario obterUsuarioPeloToken(String tokenCompleto) {
+    protected Usuario obterUsuarioPeloToken(String tokenCompleto) {
         String token = extrairToken(tokenCompleto);
         Long usuarioId = jwtService.obterId(token);
         return usuarioRepository.findById(usuarioId)
@@ -76,8 +79,12 @@ public class UsuarioService {
         return header.replace("Bearer ", "").trim();
     }
 
+    public UsuarioResponseDTO buscarUsuario(String token) {
+        return usuarioMapper.toDTO(obterUsuarioPeloToken(token));
 
-    //usado somente para o admin,deve ser removido depois
+    }
+
+    // usado somente para o admin,deve ser removido depois
     public void deletarADM(Long id) {
         usuarioRepository.deleteById(id);
     }

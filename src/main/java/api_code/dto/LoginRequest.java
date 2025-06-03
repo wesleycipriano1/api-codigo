@@ -1,13 +1,4 @@
 package api_code.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
-public class LoginRequest {
-   
-    private String email;
-    private String senha;
-    
+public record LoginRequest(String email, String senha) {
 }

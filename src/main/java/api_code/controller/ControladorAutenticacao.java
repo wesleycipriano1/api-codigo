@@ -1,27 +1,29 @@
 package api_code.controller;
 
+import java.net.URI;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import api_code.dto.UsuarioRequestDTO;
+import api_code.dto.UsuarioResponseDTO;
 import api_code.entity.Usuario;
 import api_code.security.dto.RequisicaoDTO;
 import api_code.security.dto.RespostaDTO;
 import api_code.security.service.ServicoAutenticacao;
 import api_code.service.UsuarioService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
 public class ControladorAutenticacao {
-
-    private final ServicoAutenticacao servicoAutenticacao;
-    private final UsuarioService usuarioService;
-
-    public ControladorAutenticacao(ServicoAutenticacao servicoAutenticacao, UsuarioService usuarioService) {
-        this.servicoAutenticacao = servicoAutenticacao;
-        this.usuarioService = usuarioService;
-
-    }
+    @Autowired
+    private ServicoAutenticacao servicoAutenticacao;
+    @Autowired
+    private UsuarioService usuarioService;
 
     @PostMapping("/login")
     public ResponseEntity<RespostaDTO> login(@RequestBody RequisicaoDTO requisicao) {
@@ -31,10 +33,20 @@ public class ControladorAutenticacao {
     }
 
     @PostMapping("/cadastrar")
-    public ResponseEntity<Usuario> criar(@RequestBody Usuario usuario) {
-        return ResponseEntity.ok(usuarioService.cadastrar(usuario));
+    public ResponseEntity<UsuarioResponseDTO> cadastrarUsuario(
+            @RequestBody @Valid UsuarioRequestDTO usuarioRequestDTO) {
+        UsuarioResponseDTO novoUsuarioResponseDTO = usuarioService.cadastrar(usuarioRequestDTO)
+                .orElseThrow(() -> new RuntimeException("Erro ao cadastrar usuário"));
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(novoUsuarioResponseDTO.id())
+                .toUri();
+        return ResponseEntity.created(location).body(novoUsuarioResponseDTO);
     }
-    //usado para remover um usuario sem a necessidade de token,somente para o admin,deve ser excluido depois,usado pra testes.
+
+    // usado para remover um usuario sem a necessidade de token,somente para o
+    // admin,deve ser excluido depois,usado pra testes.
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deletarUsuarioLogado(@PathVariable Long id) {
         usuarioService.deletarADM(id);

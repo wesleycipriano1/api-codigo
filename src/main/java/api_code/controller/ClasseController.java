@@ -3,6 +3,7 @@ package api_code.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import api_code.dto.ClasseRequestDTO;
@@ -31,12 +31,12 @@ public class ClasseController {
     public ResponseEntity<String> gerarClasse(@RequestBody ClasseRequestDTO dto,
             @RequestHeader("Authorization") String token) {
 
-        return ResponseEntity.ok(historicoService.gerarClasseComHistorico(dto, token));
+        return ResponseEntity.status(HttpStatus.OK).body(historicoService.gerarClasseComHistorico(dto, token));
     }
 
     @GetMapping("/historico")
     public ResponseEntity<List<HistoricoDTO>> historico(@RequestHeader("Authorization") String token) {
-        return ResponseEntity.ok(historicoService.buscarHistoricoDoUsuario(token));
+        return ResponseEntity.status(HttpStatus.OK).body(historicoService.buscarHistoricoDoUsuario(token));
     }
 
     @DeleteMapping("/deletar/{id}")

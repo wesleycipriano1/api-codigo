@@ -5,7 +5,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,7 +16,7 @@ import java.io.IOException;
 
 @Component
 public class FiltroJwt extends OncePerRequestFilter {
-    
+
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
@@ -33,7 +32,6 @@ public class FiltroJwt extends OncePerRequestFilter {
         String token = obterToken(request);
         System.out.println("🔐 FiltroJwt executado");
         System.out.println("Token JWT: " + token);
-
 
         if (token != null && jwtService.tokenValido(token)) {
             String email = jwtService.obterEmail(token);

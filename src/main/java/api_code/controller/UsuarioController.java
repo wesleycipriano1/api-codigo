@@ -2,37 +2,44 @@ package api_code.controller;
 
 import lombok.RequiredArgsConstructor;
 
+import java.net.URI;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import api_code.dto.UsuarioRequestDTO;
+import api_code.dto.UsuarioResponseDTO;
 import api_code.entity.Usuario;
 import api_code.service.UsuarioService;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/usuarios")
-@RequiredArgsConstructor
+
 public class UsuarioController {
 
     @Autowired
-    private final UsuarioService usuarioService;
+    private UsuarioService usuarioService;
 
-    @GetMapping()
-    public ResponseEntity<Usuario> buscarUsuarioLogado(@RequestHeader("Authorization") String token) {
-        return ResponseEntity.ok(usuarioService.obterUsuarioPeloToken(token));
+    @GetMapping("/me")
+    public ResponseEntity<UsuarioResponseDTO> buscarUsuarioLogado(
+            @RequestHeader("Authorization") String token) {
+        UsuarioResponseDTO usuario = usuarioService.buscarUsuario(token);
+        return ResponseEntity.ok(usuario);
     }
 
-    @PostMapping()
-    public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody @Valid Usuario usuario) {
-        return ResponseEntity.ok(usuarioService.cadastrar(usuario));
-    }
+    @PutMapping
+    public ResponseEntity<UsuarioResponseDTO> atualizarUsuarioLogado(
+            @RequestHeader("Authorization") String token,
+            @RequestBody @Valid UsuarioRequestDTO usuarioRequestDTO) {
 
-    @PutMapping()
-    public ResponseEntity<Usuario> atualizarUsuarioLogado(@RequestHeader("Authorization") String token,
-            @RequestBody @Valid Usuario usuarioAtualizado) {
+        UsuarioResponseDTO usuarioAtualizado = usuarioService.atualizar(usuarioRequestDTO, token);
 
-        return ResponseEntity.ok(usuarioService.atualizar(usuarioAtualizado, token));
+        return ResponseEntity.ok(usuarioAtualizado);
     }
 
     @DeleteMapping()
