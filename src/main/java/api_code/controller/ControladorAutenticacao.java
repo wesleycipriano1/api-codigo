@@ -3,14 +3,12 @@ package api_code.controller;
 import java.net.URI;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import api_code.dto.UsuarioRequestDTO;
 import api_code.dto.UsuarioResponseDTO;
-import api_code.entity.Usuario;
 import api_code.security.dto.RequisicaoDTO;
 import api_code.security.dto.RespostaDTO;
 import api_code.security.service.ServicoAutenticacao;

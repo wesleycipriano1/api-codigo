@@ -1,23 +1,18 @@
 package api_code.controller;
 
-import lombok.RequiredArgsConstructor;
-
-import java.net.URI;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import api_code.dto.UsuarioRequestDTO;
 import api_code.dto.UsuarioResponseDTO;
-import api_code.entity.Usuario;
 import api_code.service.UsuarioService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
+@Tag(name = "Usuarios ", description = "Operações relacionadas a usuarios")
 @RequestMapping("/api/usuarios")
 
 public class UsuarioController {
@@ -32,7 +27,7 @@ public class UsuarioController {
         return ResponseEntity.ok(usuario);
     }
 
-    @PutMapping
+    @PutMapping("/me")
     public ResponseEntity<UsuarioResponseDTO> atualizarUsuarioLogado(
             @RequestHeader("Authorization") String token,
             @RequestBody @Valid UsuarioRequestDTO usuarioRequestDTO) {
@@ -42,7 +37,7 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioAtualizado);
     }
 
-    @DeleteMapping()
+    @DeleteMapping("/me")
     public ResponseEntity<Void> deletarUsuarioLogado(@RequestHeader("Authorization") String token) {
         usuarioService.deletar(token);
         return ResponseEntity.noContent().build();

@@ -1,6 +1,8 @@
 package api_code.security.jwt;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -29,11 +31,11 @@ public class JwtService {
     // Gera o token JWT
     public String gerarToken(String email, Long id) {
         return Jwts.builder()
-                .setSubject(email)
+                .subject(email)  
                 .claim("id", id)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(secretKey)  
                 .compact();
     }
 
@@ -50,8 +52,7 @@ public class JwtService {
     public Long obterId(String token) {
         try {
             Claims claims = getClaims(token);
-            Object id = claims.get("id");
-            return id != null ? Long.valueOf(id.toString()) : null;
+            return claims.get("id", Long.class);  // Forma mais segura de obter o valor
         } catch (Exception e) {
             return null;
         }
@@ -68,12 +69,13 @@ public class JwtService {
         }
     }
 
-    // Obtém as claims do token
+    // Obtém as claims do token (MÉTODO CORRIGIDO)
     private Claims getClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(secretKey)
+        Jws<Claims> jws = Jwts.parser()
+                .verifyWith(secretKey)
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseSignedClaims(token);
+        
+        return jws.getPayload();
     }
 }
