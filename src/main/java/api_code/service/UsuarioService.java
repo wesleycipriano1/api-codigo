@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import api_code.dto.UsuarioRequestDTO;
 import api_code.dto.UsuarioResponseDTO;
 import api_code.entity.Usuario;
+import api_code.exception.CamposVaziosException;
 import api_code.exception.EmailCadastradoException;
 import api_code.exception.UsuarioNaoEncontradoExeception;
 import api_code.mapper.UsuarioMapper;
@@ -33,6 +34,10 @@ public class UsuarioService {
     public Optional<UsuarioResponseDTO> cadastrar(UsuarioRequestDTO usuarioRequestDTO) {
         if (usuarioRepository.findByEmail(usuarioRequestDTO.email()) != null) {
             throw new EmailCadastradoException("Email já cadastrado");
+        }
+        if (usuarioRequestDTO.senha() == null || usuarioRequestDTO.senha().isEmpty()) {
+            throw new CamposVaziosException("Senha não pode ser nula ou vazia");
+            
         }
 
         Usuario usuario = usuarioMapper.toEntity(usuarioRequestDTO);
