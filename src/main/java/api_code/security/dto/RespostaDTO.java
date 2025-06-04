@@ -2,11 +2,9 @@ package api_code.security.dto;
 
 public class RespostaDTO {
 
-
-
     private String token;
 
-    public RespostaDTO (String token) {
+    public RespostaDTO(String token) {
         this.token = token;
     }
 
@@ -18,6 +16,3 @@ public class RespostaDTO {
         this.token = token;
     }
 }
-
-    
-

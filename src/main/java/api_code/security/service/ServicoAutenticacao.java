@@ -24,8 +24,8 @@ public class ServicoAutenticacao {
     }
 
     public String autenticar(RequisicaoDTO requisicao) {
-        Usuario usuario = usuarioRepository.findByEmail(requisicao.getEmail());
-        if (usuario != null && passwordEncoder.matches(requisicao.getSenha(), usuario.getSenha())) {
+        Usuario usuario = usuarioRepository.findByEmail(requisicao.email());
+        if (usuario != null && passwordEncoder.matches(requisicao.senha(), usuario.getSenha())) {
             return jwtService.gerarToken(usuario.getEmail(), usuario.getId());
         }
         throw new CredenciaisInvalidasException("Credenciais inválidas");

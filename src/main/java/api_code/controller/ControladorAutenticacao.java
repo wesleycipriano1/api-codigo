@@ -33,6 +33,7 @@ public class ControladorAutenticacao {
     @PostMapping("/cadastrar")
     public ResponseEntity<UsuarioResponseDTO> cadastrarUsuario(
             @RequestBody @Valid UsuarioRequestDTO usuarioRequestDTO) {
+                System.out.println(" a senha que vem no body é --->"+usuarioRequestDTO.senha());
         UsuarioResponseDTO novoUsuarioResponseDTO = usuarioService.cadastrar(usuarioRequestDTO)
                 .orElseThrow(() -> new RuntimeException("Erro ao cadastrar usuário"));
 

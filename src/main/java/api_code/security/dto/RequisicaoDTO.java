@@ -1,19 +1,10 @@
 package api_code.security.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
-@Getter
-@Setter
-public class RequisicaoDTO {
-    
+public record RequisicaoDTO(
+        @NotBlank(message = "Email é obrigatório") @Email(message = "Email inválido") String email,
+        @NotBlank(message = "Senha é obrigatória") String senha) {
 
-
-    private String email;
-    private String senha;
-
-    
-
-
-    
 }
