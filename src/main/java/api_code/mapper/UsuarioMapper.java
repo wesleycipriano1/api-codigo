@@ -1,15 +1,29 @@
 package api_code.mapper;
 
-import org.mapstruct.Mapper;
+import org.springframework.stereotype.Component;
 
 import api_code.dto.UsuarioRequestDTO;
 import api_code.dto.UsuarioResponseDTO;
 import api_code.entity.Usuario;
 
-@Mapper(componentModel = "spring")
-public interface UsuarioMapper {
+@Component
+public class UsuarioMapper {
 
-    Usuario toEntity(UsuarioRequestDTO dto);
+    public Usuario toEntity(UsuarioRequestDTO dto) {
+        Usuario usuario = new Usuario();
+        usuario.setNome(dto.nome());
+        usuario.setEmail(dto.email());
+        usuario.setSenha(dto.senha()); 
+        usuario.setTelefone(dto.telefone());
+        usuario.setEndereco(dto.endereco());
+        return usuario;
+    }
 
-    UsuarioResponseDTO toDTO(Usuario usuario);
+    public UsuarioResponseDTO toDTO(Usuario usuario) {
+        return new UsuarioResponseDTO(
+                usuario.getId(),
+                usuario.getNome(),
+                usuario.getEmail(),
+                usuario.getTelefone());
+    }
 }
