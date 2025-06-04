@@ -24,7 +24,7 @@ public class ControladorAutenticacao {
     private UsuarioService usuarioService;
 
     @PostMapping("/login")
-    public ResponseEntity<RespostaDTO> login(@RequestBody RequisicaoDTO requisicao) {
+    public ResponseEntity<RespostaDTO> login(@Valid @RequestBody RequisicaoDTO requisicao) {
         String token = servicoAutenticacao.autenticar(requisicao);
         return ResponseEntity.ok(new RespostaDTO(token));
 

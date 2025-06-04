@@ -1,4 +1,10 @@
 package api_code.dto;
 
-public record LoginRequest(String email, String senha) {
+import jakarta.validation.constraints.NotBlank;
+
+public record LoginRequest(
+    @NotBlank(message = "Email é obrigatório")
+    String email, 
+    @NotBlank(message = "Senha é obrigatória")
+    String senha) {
 }
