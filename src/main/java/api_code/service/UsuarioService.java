@@ -41,6 +41,7 @@ public class UsuarioService {
         }
 
         Usuario usuario = usuarioMapper.toEntity(usuarioRequestDTO);
+        System.out.println(" a senha do usuario  a ser cadastrado é --->" + usuario.getSenha());    
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
 
         Usuario usuarioSalvo = usuarioRepository.save(usuario);
