@@ -37,7 +37,7 @@ public class UsuarioService {
         }
         if (usuarioRequestDTO.senha() == null || usuarioRequestDTO.senha().isEmpty()) {
             throw new CamposVaziosException("Senha não pode ser nula ou vazia");
-            
+
         }
 
         Usuario usuario = usuarioMapper.toEntity(usuarioRequestDTO);
@@ -50,11 +50,17 @@ public class UsuarioService {
 
     public UsuarioResponseDTO atualizar(UsuarioRequestDTO usuarioAtualizado, String token) {
         Usuario usuario = obterUsuarioPeloToken(token);
+        if (!usuario.getEmail().equals(usuarioAtualizado.email()) &&
+                usuarioRepository.findByEmail(usuarioAtualizado.email()) != null) {
+            throw new EmailCadastradoException("Email já cadastrado");
+        }
 
         usuario.setNome(usuarioAtualizado.nome());
         usuario.setEmail(usuarioAtualizado.email());
         usuario.setEndereco(usuarioAtualizado.endereco());
-        usuario.setSenha(passwordEncoder.encode(usuarioAtualizado.senha()));
+        if (usuarioAtualizado.senha() != null && !usuarioAtualizado.senha().isBlank()) {
+            usuario.setSenha(passwordEncoder.encode(usuarioAtualizado.senha()));
+        }
 
         Usuario usuarioSalvo = usuarioRepository.save(usuario);
         return usuarioMapper.toDTO(usuarioSalvo);
