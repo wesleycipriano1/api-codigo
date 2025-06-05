@@ -14,6 +14,7 @@ import api_code.dto.HistoricoDTO;
 import api_code.entity.HistoricoClasse;
 import api_code.entity.Usuario;
 import api_code.exception.UsuarioNaoEncontradoExeception;
+
 import api_code.repository.HistoricoClasseRepository;
 import api_code.util.ClasseFactory;
 
@@ -21,7 +22,7 @@ import api_code.util.ClasseFactory;
 public class HistoricoService {
 
     @Autowired
-    private HistoricoClasseRepository historicoRepo;
+    private HistoricoClasseRepository historicoRepository;
 
     @Autowired
     private UsuarioService usuarioService;
@@ -36,13 +37,8 @@ public class HistoricoService {
 
     @Cacheable(value = "historico", key = "#tokenCompleto")
     public List<HistoricoDTO> buscarHistoricoDoUsuario(String tokenCompleto) {
-        System.out.println("deu redis aqui");
         Usuario usuario = usuarioService.obterUsuarioPeloToken(tokenCompleto);
-
-        return historicoRepo.findByUsuarioId(usuario.getId())
-                .stream()
-                .map(HistoricoDTO::new)
-                .collect(Collectors.toList());
+        return historicoRepository.findHistoricoDTOByUsuarioId(usuario.getId());
     }
 
     private void salvarHistorico(String linguagem, String codigo, Usuario usuario) {
@@ -52,14 +48,14 @@ public class HistoricoService {
         historico.setDataModificacao(LocalDateTime.now());
         historico.setUsuario(usuario);
 
-        historicoRepo.save(historico);
+        historicoRepository.save(historico);
     }
 
     @CacheEvict(value = "historico", key = "#tokenCompleto")
     public Void deletarHistorico(String tokenCompleto, Long id) {
         Usuario usuario = usuarioService.obterUsuarioPeloToken(tokenCompleto);
-        if (usuario != null && historicoRepo.findById(id).isPresent()) {
-            historicoRepo.deleteById(id);
+        if (usuario != null && historicoRepository.findById(id).isPresent()) {
+            historicoRepository.deleteById(id);
             return null;
         } else {
             throw new UsuarioNaoEncontradoExeception("Usuário não encontrado ou histórico não encontrado");
