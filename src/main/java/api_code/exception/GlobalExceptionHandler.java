@@ -2,6 +2,7 @@ package api_code.exception;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -67,5 +68,21 @@ public class GlobalExceptionHandler {
         erro.put("erro", "Erro inesperado. Tente novamente mais tarde.");
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(erro);
+    }
+
+    @ExceptionHandler(BloqueadoException.class)
+    public ResponseEntity<Object> handleBoqueadoException(BloqueadoException ex) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Retry-After", String.valueOf(ex.getRetryAfterSeconds()));
+
+        Map<String, Object> erro = new HashMap<>();
+        erro.put("message", ex.getMessage());
+        erro.put("retryAfterSeconds", ex.getRetryAfterSeconds());
+        erro.put("timestamp", LocalDateTime.now());
+        erro.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                .headers(headers)
+                .body(erro);
+
     }
 }

@@ -52,7 +52,7 @@ public class JwtService {
     public Long obterId(String token) {
         try {
             Claims claims = getClaims(token);
-            return claims.get("id", Long.class);  // Forma mais segura de obter o valor
+            return claims.get("id", Long.class);  
         } catch (Exception e) {
             return null;
         }
