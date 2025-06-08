@@ -14,7 +14,6 @@ import api_code.dto.HistoricoDTO;
 import api_code.entity.HistoricoClasse;
 import api_code.entity.Usuario;
 import api_code.exception.UsuarioNaoEncontradoExeception;
-
 import api_code.repository.HistoricoClasseRepository;
 import api_code.util.ClasseFactory;
 

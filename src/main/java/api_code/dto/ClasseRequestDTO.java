@@ -15,8 +15,10 @@ public class ClasseRequestDTO {
     private String nomeClasse;
     @NotBlank(message = "O encapsulamento  não pode ser vazio")
     private String encapsulamentoClasse;
-    
+    private List <String> interfaces;
     private String heranca;
+
+    
 
     private List<AtributoDTO> atributos;
     @Getter
