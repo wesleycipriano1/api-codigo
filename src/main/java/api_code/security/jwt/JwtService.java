@@ -69,7 +69,7 @@ public class JwtService {
         }
     }
 
-    // Obtém as claims do token (MÉTODO CORRIGIDO)
+    // Obtém as claims do token (MÉTODO CORRIGIDO....)
     private Claims getClaims(String token) {
         Jws<Claims> jws = Jwts.parser()
                 .verifyWith(secretKey)

@@ -1,8 +1,9 @@
 package api_code.controller;
 
-import api_code.service.RecuperacaoSenhaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import api_code.service.RecuperacaoSenhaService;
 
 import java.util.Map;
 
@@ -24,6 +25,7 @@ public class RecuperarSenhaController {
 
     @PostMapping("/redefinir")
     public ResponseEntity<Void> redefinir(@RequestBody Map<String, String> body) {
+        // Modifique para receber o token do corpo, não do header
         service.redefinirSenha(body.get("token"), body.get("novaSenha"));
         return ResponseEntity.ok().build();
     }

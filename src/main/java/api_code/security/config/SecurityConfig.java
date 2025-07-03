@@ -15,6 +15,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import api_code.security.jwt.FiltroJwt;
+
+
 import api_code.security.service.ServicoDetalhesUsuario;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,13 +28,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
+    
     private final ServicoDetalhesUsuario servicoDetalhesUsuario;
     private final FiltroJwt filtroJwt;
 
-    public SecurityConfig(ServicoDetalhesUsuario servicoDetalhesUsuario, FiltroJwt filtroJwt) {
+    public SecurityConfig(ServicoDetalhesUsuario servicoDetalhesUsuario, FiltroJwt filtroJwt ) {
         this.servicoDetalhesUsuario = servicoDetalhesUsuario;
         this.filtroJwt = filtroJwt;
+        
     }
 
     @Bean
@@ -48,32 +51,36 @@ public class SecurityConfig {
         return authBuilder.build();
     }
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .cors(Customizer.withDefaults())
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/api/recuperar-senha/**", "/v1/api/**",
-                                "/v2/api-docs",
-                                "/v3/api-docs",
-                                "/v3/api-docs/**",
-                                "/swagger-resources",
-                                "/swagger-resources/**",
-                                "/configuration/ui",
-                                "/configuration/security",
-                                "/swagger-ui/**",
-                                "/webjars/**",
-                                "/swagger-ui.html",
-                                "/actuator/**"
-                                )
-                        .permitAll()
-                        .anyRequest().authenticated())
-                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(filtroJwt, UsernamePasswordAuthenticationFilter.class);
+   @Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http
+        .cors(Customizer.withDefaults())
+        .csrf(AbstractHttpConfigurer::disable)
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/auth/**", "/api/recuperar-senha/**","/api/recuperar-senha/redefinir", "/v1/api/**",
+                "/v2/api-docs",
+                "/v3/api-docs",
+                "/v3/api-docs/**",
+                "/swagger-resources",
+                "/swagger-resources/**",
+                "/configuration/ui",
+                "/configuration/security",
+                "/swagger-ui/**",
+                "/webjars/**",
+                "/swagger-ui.html",
+                "/actuator/**",
+                "/login/**", "/oauth2/**"
+            ).permitAll()
+            .anyRequest().authenticated()
+        )
+       
 
-        return http.build();
-    }
+        .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .addFilterBefore(filtroJwt, UsernamePasswordAuthenticationFilter.class);
+
+    return http.build();
+}
+
 
     @Bean
 public CorsConfigurationSource corsConfigurationSource() {
